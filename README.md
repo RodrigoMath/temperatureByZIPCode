@@ -13,6 +13,9 @@ Sistema em Go que retorna a temperatura atual (Celsius, Fahrenheit e Kelvin) a p
 curl http://localhost:8080/01001000
 ```
 
+```cloudrun
+ curl https://temperatura-por-cep-502159538479.europe-west1.run.app/01001000
+```
 Resposta:
 
 ```json
