@@ -1,0 +1,39 @@
+# Git
+.git
+.gitignore
+.github
+.gitkeep
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Go
+*.log
+coverage.out
+coverage.html
+bin/
+dist/
+
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Test artifacts
+test-results/
