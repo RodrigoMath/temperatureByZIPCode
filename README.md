@@ -97,7 +97,7 @@ docker push gcr.io/PROJECT_ID/temperatura-por-cep
 gcloud run deploy temperatura-por-cep \
   --image gcr.io/PROJECT_ID/temperatura-por-cep \
   --platform managed \
-  --region us-central1 \
+  --region europe-west1
   --allow-unauthenticated
 ```
 

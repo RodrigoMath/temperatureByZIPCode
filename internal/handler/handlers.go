@@ -29,12 +29,22 @@ func NewWeatherHandler(viacepService service.ViaCEPService, weatherService servi
 func (h *WeatherHandler) GetTemperatureByCEP(w http.ResponseWriter, r *http.Request) {
 	cep := chi.URLParam(r, "cep")
 
-	// Validação do CEP: deve ter exatamente 8 dígitos
+	// Validação do CEP: deve ter exatamente 8 dígitos numéricos
 	if len(cep) != 8 {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusUnprocessableEntity) // 422
 		json.NewEncoder(w).Encode(model.ErrorResponse{Message: "invalid zipcode"})
 		return
+	}
+	
+	// Verifica se todos os caracteres são dígitos
+	for _, ch := range cep {
+		if ch < '0' || ch > '9' {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusUnprocessableEntity) // 422
+			json.NewEncoder(w).Encode(model.ErrorResponse{Message: "invalid zipcode"})
+			return
+		}
 	}
 
 	// Busca a localização pelo CEP

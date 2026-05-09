@@ -109,6 +109,45 @@ func TestWeatherHandler_GetTemperatureByCEP_InvalidFormat_Long(t *testing.T) {
 	}
 }
 
+func TestWeatherHandler_GetTemperatureByCEP_InvalidFormat_WithNonNumeric(t *testing.T) {
+	h := NewWeatherHandler(&mockViaCEP{}, &mockWeather{})
+
+	// Testa com CEP contendo caractere não numérico (letra)
+	req := httptest.NewRequest("GET", "/0000000A", nil)
+	w := httptest.NewRecorder()
+
+	r := chi.NewRouter()
+	r.Get("/{cep}", h.GetTemperatureByCEP)
+	r.ServeHTTP(w, req)
+
+	if w.Code != http.StatusUnprocessableEntity {
+		t.Errorf("Expected status 422 for CEP with letter, got %d", w.Code)
+	}
+
+	var errResp model.ErrorResponse
+	if err := json.Unmarshal(w.Body.Bytes(), &errResp); err != nil {
+		t.Fatalf("Failed to unmarshal error response: %v", err)
+	}
+	if errResp.Message != "invalid zipcode" {
+		t.Errorf("Expected message 'invalid zipcode', got '%s'", errResp.Message)
+	}
+}
+
+func TestWeatherHandler_GetTemperatureByCEP_InvalidFormat_WithLetter(t *testing.T) {
+	h := NewWeatherHandler(&mockViaCEP{}, &mockWeather{})
+
+	req := httptest.NewRequest("GET", "/0000000A", nil)
+	w := httptest.NewRecorder()
+
+	r := chi.NewRouter()
+	r.Get("/{cep}", h.GetTemperatureByCEP)
+	r.ServeHTTP(w, req)
+
+	if w.Code != http.StatusUnprocessableEntity {
+		t.Errorf("Expected status 422, got %d", w.Code)
+	}
+}
+
 func TestWeatherHandler_GetTemperatureByCEP_NotFound(t *testing.T) {
 	mockViacep := &mockViaCEP{
 		err: service.ErrZipCodeNotFound,
